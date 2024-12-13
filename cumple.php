@@ -47,33 +47,32 @@ function sendBirthdayEmail($client, $clients) {
             $mail->addCC($ccEmail);
         }
         $mail->isHTML(true);
-        $mail->Subject = "Hoy " . $client['name'] . " está de cumpleaños!";
-        $mail->CharSet = 'UTF-8'; 
-        
+        $mail->Subject = utf8_encode("Hoy " . $client['name'] . " está de cumpleaños!"); // Asegúrate de que se codifique correctamente
+        $mail->CharSet = 'UTF-8'; // Establece la codificación de caracteres a UTF-8
+
         // Contenido del correo (HTML directamente en el código)
-$htmlContent = "
-<html>
-<head>
-    <title>¡Feliz Cumpleaños!</title>
-    <style>
-        /* Estilos responsivos */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        img {
-            max-width: 100%; /* Hace que la imagen sea responsiva */
-            height: auto;
-        }
-    </style>
-</head>
-<body>
-    <img src='cid:image1' alt='Tarjeta de Cumpleaños'>
-</body>
-</html>";
+        $htmlContent = "
+        <html>
+        <head>
+            <title>¡Feliz Cumpleaños!</title>
+            <style>
+                /* Estilos responsivos */
+                body {
+                    font-family: Arial, sans-serif;
+                }
+                img {
+                    max-width: 100%; /* Hace que la imagen sea responsiva */
+                    height: auto;
+                }
+            </style>
+        </head>
+        <body>
+            <img src='cid:image1' alt='Tarjeta de Cumpleaños'>
+        </body>
+        </html>";
 
-// Enviar el contenido HTML
-$mail->Body = $htmlContent;
-
+        // Enviar el contenido HTML
+        $mail->Body = $htmlContent;
 
         // Adjuntar imagen
         $imagePath = __DIR__ . '/TarjetaCumpleañosTF.gif';
@@ -102,6 +101,17 @@ function checkBirthdays() {
     }
 }
 
-// Ejecutar la verificación
-checkBirthdays();
+// Verificar la hora antes de enviar los correos
+function checkTimeAndSendEmails() {
+    $currentTime = date('H:i'); 
+    $targetTime = '08:20'; 
+
+    if ($currentTime === $targetTime) {
+        checkBirthdays(); 
+    } else {
+        echo "No es la hora correcta para enviar correos. Hora actual: $currentTime\n";
+    }
+}
+
+checkTimeAndSendEmails();
 ?>
